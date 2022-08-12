@@ -9,12 +9,13 @@ namespace Characters
         [SerializeField]
         private Animator _animator;
 
-        public int Health;
+        [SerializeField]
+        private Health _health;
 
         [SerializeField]
         public Weapon _weapon;
 
-        public bool IsAlive => Health > 0;
+        public bool IsAlive => _health.IsAlive;
 
 
         public IEnumerator Attack(Character attackedCharacter)
@@ -24,17 +25,7 @@ namespace Characters
 
             yield return new WaitForSeconds(2f);
 
-            attackedCharacter.Health -= _weapon.Damage;
-
-            if (attackedCharacter.Health <= 0)
-            {
-                attackedCharacter.Die();
-            }
-        }
-
-        private void Die()
-        {
-            Debug.Log($"Character.Die: {name}");
+            attackedCharacter._health.TakeDamage(_weapon.Damage);
         }
     }
 }

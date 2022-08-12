@@ -46,7 +46,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 3004723491567246997}
-  Health: 10
+  _health:
+    _maximumHealth: 10
+    _currentHealth: 10
   _weapon:
     _weaponType: 1
     _damage: 3
