@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
+    public GameObject player;
+    public GameObject enemy;
+    
     private void Start()
     {
         // Show menu
