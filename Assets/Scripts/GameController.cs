@@ -37,16 +37,14 @@ public class GameController : MonoBehaviour
         {
             if (player.Health > 0 && enemy.Health > 0)
             {
-                player.Attack(enemy);
-                yield return new WaitForSeconds(2f);
+                yield return player.Attack(enemy);
             }
 
             yield return new WaitForSeconds(1f);
 
             if (player.Health > 0 && enemy.Health > 0)
             {
-                enemy.Attack(player);
-                yield return new WaitForSeconds(2f);
+                yield return enemy.Attack(player);
             }
 
             yield return new WaitForSeconds(1f);

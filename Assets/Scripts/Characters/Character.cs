@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Character : MonoBehaviour
@@ -7,9 +8,11 @@ public class Character : MonoBehaviour
 
     public int Health;
 
-    public void Attack(Character attackedCharacter)
+    public IEnumerator Attack(Character attackedCharacter)
     {
         _animator.SetTrigger("shoot");
+
+        yield return new WaitForSeconds(2f);
 
         attackedCharacter.Health -= 1;
 
