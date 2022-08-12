@@ -8,6 +8,9 @@ public class Character : MonoBehaviour
 
     public int Health;
 
+    public bool IsAlive => Health > 0;
+
+
     public IEnumerator Attack(Character attackedCharacter)
     {
         if (Health > 8)
