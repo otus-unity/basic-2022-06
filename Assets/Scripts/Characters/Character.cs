@@ -1,4 +1,5 @@
 using System.Collections;
+using Helpers;
 using UnityEngine;
 
 namespace Characters
@@ -18,14 +19,8 @@ namespace Characters
 
         public IEnumerator Attack(Character attackedCharacter)
         {
-            if (Health > 8)
-            {
-                _animator.SetTrigger("shoot");
-            }
-            else
-            {
-                _animator.SetTrigger("melee");
-            }
+            var weaponAnimationName = WeaponHelpers.GetAnimationNameFor(_weapon.Type);
+            _animator.SetTrigger(weaponAnimationName);
 
             yield return new WaitForSeconds(2f);
 
