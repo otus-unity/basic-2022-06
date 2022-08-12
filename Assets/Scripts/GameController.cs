@@ -22,15 +22,15 @@ using UnityEngine;
 // Show game over (success or fail)
 public class GameController : MonoBehaviour
 {
-    public GameObject player;
-    public GameObject enemy;
+    public Character player;
+    public Character enemy;
     
     private void Start()
     {
-        // while (player.Health > 0 && enemy.Health > 0)
-        // {
-        //     player.Attack(enemy);
-        //     enemy.Attack(player);
-        // }
+        while (player.Health > 0 && enemy.Health > 0)
+        {
+            player.Attack(enemy); // Can kill enemy => should skip enemy's attack
+            enemy.Attack(player);
+        }
     }
 }
