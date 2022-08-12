@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 // Show menu
@@ -24,13 +25,32 @@ public class GameController : MonoBehaviour
 {
     public Character player;
     public Character enemy;
-    
+
     private void Start()
     {
-        while (player.Health > 0 && enemy.Health > 0)
+        StartCoroutine(LevelLoop());
+    }
+
+    private IEnumerator LevelLoop()
+    {
+        while (true)
         {
-            player.Attack(enemy); // Can kill enemy => should skip enemy's attack
-            enemy.Attack(player);
+            if (player.Health > 0 && enemy.Health > 0)
+            {
+                player.Attack(enemy);
+                yield return null;
+            }
+
+            if (player.Health > 0 && enemy.Health > 0)
+            {
+                enemy.Attack(player);
+                yield return null;
+            }
+            
+            if (player.Health == 0 || enemy.Health == 0)
+            {
+                yield break;
+            }
         }
     }
 }
