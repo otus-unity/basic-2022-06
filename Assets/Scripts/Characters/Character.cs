@@ -8,6 +8,9 @@ public class Character : MonoBehaviour
 
     public int Health;
 
+    [SerializeField]
+    public Weapon _weapon;
+
     public bool IsAlive => Health > 0;
 
 
@@ -24,7 +27,7 @@ public class Character : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
 
-        attackedCharacter.Health -= 1;
+        attackedCharacter.Health -= _weapon.Damage;
 
         if (attackedCharacter.Health <= 0)
         {

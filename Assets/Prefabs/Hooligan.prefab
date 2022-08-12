@@ -46,7 +46,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animator: {fileID: 1478111208453762236}
-  Health: 10
+  Health: 15
+  _weapon:
+    _weaponType: 2
+    _damage: 1
 --- !u!1001 &8305958185470435978
 PrefabInstance:
   m_ObjectHideFlags: 0
