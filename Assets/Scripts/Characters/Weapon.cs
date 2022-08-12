@@ -14,5 +14,15 @@ namespace Characters
 
         public WeaponType Type => _weaponType;
         public int Damage => _damage;
+
+        public Weapon()
+        {
+        }
+
+        public Weapon(WeaponType weaponType, int damage)
+        {
+            _weaponType = weaponType;
+            _damage = damage;
+        }
     }
 }

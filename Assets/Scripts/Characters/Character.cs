@@ -11,6 +11,7 @@ namespace Characters
 
         [SerializeField]
         private Health _health;
+        public Health Health => _health;
 
         [SerializeField]
         public Weapon _weapon;
@@ -34,7 +35,7 @@ namespace Characters
 
             yield return new WaitForSeconds(2f);
 
-            attackedCharacter._health.TakeDamage(_weapon.Damage);
+            attackedCharacter.Health.TakeDamage(_weapon.Damage);
         }
     }
 }
