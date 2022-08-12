@@ -33,43 +33,80 @@ public class GameController : MonoBehaviour
 
     private Weapon _sniperRifle = new Weapon(WeaponType.SniperRifle, 5);
 
+    private Queue _turns = new Queue();
 
     private void Start()
     {
+        foreach (var character in _playerCharacters)
+        {
+            _turns.Enqueue(character);
+        }
+
+        foreach (var character in _enemyCharacters)
+        {
+            _turns.Enqueue(character);
+        }
+
         StartCoroutine(LevelLoop());
     }
 
     private IEnumerator LevelLoop()
     {
-        while (true)
+        foreach (var turn in GetTurns())
         {
-            foreach (var player in _playerCharacters)
+            if (turn is Character character)
             {
-                if (AreCharactersAlive(_playerCharacters) && AreCharactersAlive(_enemyCharacters))
+                if (character.IsAlive)
                 {
-                    var enemyTarget = GetTarget(_enemyCharacters);
-                    yield return player.Attack(enemyTarget);
+                    var opponent = (IsPlayerCharacter(character)) ? GetTarget(_enemyCharacters) : GetTarget(_playerCharacters);
+                    yield return character.Attack(opponent);
+
+                    yield return new WaitForSeconds(1f);
+
+                    // Pushing this character back to queue
+                    _turns.Enqueue(character);
+                }
+            }
+            else if (turn is Weapon weapon)
+            {
+                var enemy = _enemyCharacters.FirstOrDefault(character => character.IsAlive);
+                if (enemy != null && enemy.IsAlive)
+                {
+                    enemy.Health.TakeDamage(_sniperRifle.Damage);
                 }
 
                 yield return new WaitForSeconds(1f);
+
+                // Do NOT push sniper rifle back to queue
             }
 
-            foreach (var enemy in _enemyCharacters)
+            if (AreAllCharactersDead(_enemyCharacters))
             {
-                if (AreCharactersAlive(_playerCharacters) && AreCharactersAlive(_enemyCharacters))
-                {
-                    var playerTarget = GetTarget(_playerCharacters);
-                    yield return enemy.Attack(playerTarget);
-                }
-
-                yield return new WaitForSeconds(1f);
+                GameWon();
+                yield break;
             }
 
-            if (AreAllCharactersDead(_playerCharacters) || AreAllCharactersDead(_enemyCharacters))
+            if (AreAllCharactersDead(_playerCharacters))
             {
+                GameLost();
                 yield break;
             }
         }
+    }
+
+
+    private IEnumerable GetTurns()
+    {
+        while (true)
+        {
+            var dequeue = _turns.Dequeue();
+            yield return dequeue;
+        }
+    }
+
+    private bool IsPlayerCharacter(Character character)
+    {
+        return _playerCharacters.Contains(character);
     }
 
     private bool AreCharactersAlive(Character[] characters, int minAlive = 1)
@@ -112,10 +149,19 @@ public class GameController : MonoBehaviour
 
     public void CallSniper()
     {
-        var enemy = _enemyCharacters.FirstOrDefault(character => character.IsAlive);
-        if (enemy != null && enemy.IsAlive)
-        {
-            enemy.Health.TakeDamage(_sniperRifle.Damage);
-        }
+        if (_turns.Contains(_sniperRifle))
+            return;
+
+        _turns.Enqueue(_sniperRifle);
+    }
+
+    private void GameWon()
+    {
+        Debug.Log("GameController.GameWon: ");
+    }
+
+    private void GameLost()
+    {
+        Debug.Log("GameController.GameLost: ");
     }
 }
