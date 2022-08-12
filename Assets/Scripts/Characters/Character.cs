@@ -10,9 +10,25 @@ public class Character : MonoBehaviour
 
     public IEnumerator Attack(Character attackedCharacter)
     {
-        _animator.SetTrigger("shoot");
+        if (Health > 8)
+        {
+            // _animator.SetTrigger("shoot");
+            _animator.Play("m_pistol_shoot");
+        }
+        else
+        {
+            // _animator.SetTrigger("melee");
+            _animator.Play("m_melee_combat_attack_A");
+        }
 
-        yield return new WaitForSeconds(2f);
+        // Wait one frame so that animation state is switched and animatorStateInfo's length will show real length
+        yield return null;
+
+        var currentAnimatorStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
+        
+        var duration = currentAnimatorStateInfo.length;
+        Debug.Log("Character.Attack: duration = " + duration);
+        yield return new WaitForSeconds(duration);
 
         attackedCharacter.Health -= 1;
 

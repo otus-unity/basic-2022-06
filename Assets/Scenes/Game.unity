@@ -997,6 +997,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1384664818}
     m_Modifications:
+    - target: {fileID: 2805311598783846362, guid: 83df4009a06ad0049a64e178518be6dc, type: 3}
+      propertyPath: Health
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4473627415420613541, guid: 83df4009a06ad0049a64e178518be6dc, type: 3}
       propertyPath: m_Name
       value: Hooligan
