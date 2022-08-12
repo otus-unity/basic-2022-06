@@ -12,23 +12,14 @@ public class Character : MonoBehaviour
     {
         if (Health > 8)
         {
-            // _animator.SetTrigger("shoot");
-            _animator.Play("m_pistol_shoot");
+            _animator.SetTrigger("shoot");
         }
         else
         {
-            // _animator.SetTrigger("melee");
-            _animator.Play("m_melee_combat_attack_A");
+            _animator.SetTrigger("melee");
         }
 
-        // Wait one frame so that animation state is switched and animatorStateInfo's length will show real length
-        yield return null;
-
-        var currentAnimatorStateInfo = _animator.GetCurrentAnimatorStateInfo(0);
-        
-        var duration = currentAnimatorStateInfo.length;
-        Debug.Log("Character.Attack: duration = " + duration);
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(2f);
 
         attackedCharacter.Health -= 1;
 
