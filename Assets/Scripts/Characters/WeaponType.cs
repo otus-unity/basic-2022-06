@@ -1,5 +1,8 @@
-internal enum WeaponType
+namespace Characters
 {
-    Gun = 1,
-    BaseballBat = 2
+    public enum WeaponType
+    {
+        Gun = 1,
+        BaseballBat = 2
+    }
 }

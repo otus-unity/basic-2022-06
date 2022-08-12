@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Linq;
+using Characters;
 using UnityEngine;
 
 // Show menu

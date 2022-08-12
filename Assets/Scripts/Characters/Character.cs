@@ -1,42 +1,45 @@
 using System.Collections;
 using UnityEngine;
 
-public class Character : MonoBehaviour
+namespace Characters
 {
-    [SerializeField]
-    private Animator _animator;
-
-    public int Health;
-
-    [SerializeField]
-    public Weapon _weapon;
-
-    public bool IsAlive => Health > 0;
-
-
-    public IEnumerator Attack(Character attackedCharacter)
+    public class Character : MonoBehaviour
     {
-        if (Health > 8)
+        [SerializeField]
+        private Animator _animator;
+
+        public int Health;
+
+        [SerializeField]
+        public Weapon _weapon;
+
+        public bool IsAlive => Health > 0;
+
+
+        public IEnumerator Attack(Character attackedCharacter)
         {
-            _animator.SetTrigger("shoot");
+            if (Health > 8)
+            {
+                _animator.SetTrigger("shoot");
+            }
+            else
+            {
+                _animator.SetTrigger("melee");
+            }
+
+            yield return new WaitForSeconds(2f);
+
+            attackedCharacter.Health -= _weapon.Damage;
+
+            if (attackedCharacter.Health <= 0)
+            {
+                attackedCharacter.Die();
+            }
         }
-        else
+
+        private void Die()
         {
-            _animator.SetTrigger("melee");
+            Debug.Log($"Character.Die: {name}");
         }
-
-        yield return new WaitForSeconds(2f);
-
-        attackedCharacter.Health -= _weapon.Damage;
-
-        if (attackedCharacter.Health <= 0)
-        {
-            attackedCharacter.Die();
-        }
-    }
-
-    private void Die()
-    {
-        Debug.Log($"Character.Die: {name}");
     }
 }
