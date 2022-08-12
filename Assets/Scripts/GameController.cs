@@ -35,6 +35,9 @@ public class GameController : MonoBehaviour
 
     private Queue _turns = new Queue();
 
+    private Character _selectedTarget;
+
+
     private void Start()
     {
         foreach (var character in _playerCharacters)
@@ -50,6 +53,7 @@ public class GameController : MonoBehaviour
         StartCoroutine(LevelLoop());
     }
 
+    
     private IEnumerator LevelLoop()
     {
         foreach (var turn in GetTurns())
@@ -58,8 +62,10 @@ public class GameController : MonoBehaviour
             {
                 if (character.IsAlive)
                 {
-                    var opponent = (IsPlayerCharacter(character)) ? GetTarget(_enemyCharacters) : GetTarget(_playerCharacters);
-                    yield return character.Attack(opponent);
+                    var targetCharacters = (IsPlayerCharacter(character)) ? _enemyCharacters :_playerCharacters;
+                    yield return GetTarget(targetCharacters);
+
+                    yield return character.Attack(_selectedTarget);
 
                     yield return new WaitForSeconds(1f);
 
@@ -142,9 +148,18 @@ public class GameController : MonoBehaviour
         return true;
     }
 
-    private Character GetTarget(Character[] characters)
+    private IEnumerator GetTarget(Character[] characters)
     {
-        return characters.First(character => character.IsAlive);
+        // jTODO show message "Select a target"
+        _selectedTarget = null;
+        while (_selectedTarget == null)
+        {
+            // Waiting until the user selects target
+            yield return null;
+        }
+        
+        // jTODO need to select target elsewhere, even like this:
+        // _selectedTarget = characters.First(character => character.IsAlive);
     }
 
     public void CallSniper()
