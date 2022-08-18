@@ -34,7 +34,7 @@ namespace Characters
             _animator.SetTrigger(weaponAnimationName);
 
             yield return new WaitForSeconds(2f);
-
+            
             attackedCharacter.Health.TakeDamage(_weapon.Damage);
         }
     }
