@@ -16,6 +16,9 @@ namespace Characters
         [SerializeField]
         public Weapon _weapon;
 
+        [SerializeField] private Animation _attackEffect;
+        [SerializeField] private GameObject _damageEffect;
+        
         public bool IsAlive => _health.IsAlive;
 
         private void Start()
@@ -30,12 +33,29 @@ namespace Characters
 
         public IEnumerator Attack(Character attackedCharacter)
         {
+            ShowAttackEffect();
             var weaponAnimationName = WeaponHelpers.GetAnimationNameFor(_weapon.Type);
             _animator.SetTrigger(weaponAnimationName);
 
             yield return new WaitForSeconds(2f);
-            
+
             attackedCharacter.Health.TakeDamage(_weapon.Damage);
+            attackedCharacter.ShowDamageEffect();
+        }
+
+        public void ShowAttackEffect()
+        {
+            if (_attackEffect) _attackEffect.Play();
+        }
+        
+        public void ShowDamageEffect()
+        {
+            if (!_damageEffect) return;
+
+            foreach (var effect in _damageEffect.GetComponentsInChildren<ParticleSystem>())
+            {
+                effect.Play();
+            }
         }
     }
 }

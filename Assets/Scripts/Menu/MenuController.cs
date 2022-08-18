@@ -30,7 +30,7 @@ public class MenuController : MonoBehaviour
     public void StartNewGame()
     {
         SetCurrentScreen(Screen.None);
-        SceneManager.LoadScene("Game");
+        LoadingScreen.instance.LoadScene("Game");
     }
 
     public void OpenSettings()
