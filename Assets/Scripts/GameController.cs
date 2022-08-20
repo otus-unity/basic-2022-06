@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using Characters;
+using Helpers;
 using UnityEngine;
 
 // Show menu
@@ -35,6 +36,10 @@ public class GameController : MonoBehaviour
 
     private Queue _turns = new Queue();
 
+    private bool _isTargetSelectionConfirmed;
+    private Character _selectedTarget;
+
+
     private void Start()
     {
         foreach (var character in _playerCharacters)
@@ -56,10 +61,22 @@ public class GameController : MonoBehaviour
         {
             if (turn is Character character)
             {
+                _isTargetSelectionConfirmed = false;
+
                 if (character.IsAlive)
                 {
-                    var opponent = (IsPlayerCharacter(character)) ? GetTarget(_enemyCharacters) : GetTarget(_playerCharacters);
-                    yield return character.Attack(opponent);
+                    if (IsPlayerCharacter(character))
+                    {
+                        yield return SelectTarget(_enemyCharacters);
+                    }
+                    else
+                    {
+                        AutoSelectTarget(_playerCharacters);
+                    }
+
+                    yield return character.Attack(_selectedTarget);
+
+                    _selectedTarget.SelectionFrame.SetActive(false);
 
                     yield return new WaitForSeconds(1f);
 
@@ -142,9 +159,26 @@ public class GameController : MonoBehaviour
         return true;
     }
 
-    private Character GetTarget(Character[] characters)
+    private IEnumerator SelectTarget(Character[] characters)
     {
-        return characters.First(character => character.IsAlive);
+        // Initiate selection 
+        SwitchTarget();
+
+        while (!_isTargetSelectionConfirmed)
+        {
+            yield return null;
+        }
+
+        // Real selection moved to UI button handlers
+    }
+
+    private void AutoSelectTarget(Character[] characters)
+    {
+        _selectedTarget = characters.First(character => character.IsAlive);
+
+        _selectedTarget.SelectionFrame.SetActive(true);
+
+        _isTargetSelectionConfirmed = true;
     }
 
     public void CallSniper()
@@ -164,4 +198,47 @@ public class GameController : MonoBehaviour
     {
         Debug.Log("GameController.GameLost: ");
     }
+
+    #region UI Button Handlers
+
+    public void SwitchTarget()
+    {
+        if (AreAllCharactersDead(_enemyCharacters))
+        {
+            return;
+        }
+
+        if (_selectedTarget != null)
+        {
+            _selectedTarget.SelectionFrame.SetActive(false);
+        }
+
+        var currentTargetIndex = CharacterHelpers.GetIndexOf(_selectedTarget, _enemyCharacters);
+
+        while (true)
+        {
+            currentTargetIndex += 1;
+            if (currentTargetIndex >= _enemyCharacters.Length)
+                currentTargetIndex = 0;
+
+            if (_enemyCharacters[currentTargetIndex].IsAlive)
+            {
+                _selectedTarget = _enemyCharacters[currentTargetIndex];
+                _selectedTarget.SelectionFrame.SetActive(true);
+                return;
+            }
+        }
+    }
+
+    public void ConfirmSelectedTarget()
+    {
+        if (AreAllCharactersDead(_enemyCharacters))
+        {
+            return;
+        }
+
+        _isTargetSelectionConfirmed = true;
+    }
+
+    #endregion
 }
