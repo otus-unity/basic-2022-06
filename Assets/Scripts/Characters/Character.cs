@@ -64,6 +64,7 @@ namespace Characters
             }
 
             ShowAttackEffect();
+            
             var weaponAnimationName = WeaponHelpers.GetAnimationNameFor(_weapon.Type);
             _animator.SetTrigger(weaponAnimationName);
 
