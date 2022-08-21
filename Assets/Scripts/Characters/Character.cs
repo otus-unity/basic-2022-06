@@ -18,6 +18,8 @@ namespace Characters
         public Weapon _weapon;
 
         [SerializeField] private Animation _attackEffect;
+        [SerializeField] private PlaySound _playSound;
+        [SerializeField] private string _playSoundName;
         [SerializeField] private GameObject _damageEffect;
 
         [SerializeField] private GameObject _selectionFrame;
@@ -103,6 +105,7 @@ namespace Characters
         public void ShowAttackEffect()
         {
             if (_attackEffect) _attackEffect.Play();
+            if (_playSound) _playSound.PlaySoundEffect(_playSoundName);
         }
 
         public void ShowDamageEffect()
